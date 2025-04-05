@@ -17,22 +17,12 @@ class Kernel extends ConsoleKernel
     /**
      * Define la programación de tareas.
      */
-        protected function schedule(Schedule $schedule)
+    protected function schedule(Schedule $schedule)
     {
-        // Tarea para eliminar registros con más de 1 año de antigüedad
-        $schedule->call(function () {
-            $models = [
-                \App\Models\Compra::class,
-                \App\Models\Venta::class,
-                \App\Models\Reparacion::class,
-                // Agrega otros modelos si es necesario
-            ];
-
-            foreach ($models as $model) {
-                $model::where('fecha', '<', now()->subYear())->delete();
-                \Log::info("Limpieza de registros antiguos en: " . class_basename($model));
-            }
-        })->daily(); // Se ejecuta diariamente
+        // Ejecutar el job diariamente a la medianoche
+        $schedule->job(new \App\Jobs\eliminarRegistrosAntiguos())
+                ->daily()
+                ->description('Eliminar registros con más de 1 año de antigüedad');
     }
 
     /**
@@ -49,3 +39,12 @@ class Kernel extends ConsoleKernel
         'admin' => \App\Http\Middleware\CheckAdmin::class,
     ];
 }
+
+
+/* php artisan tinker
+Psy Shell v0.12.8 (PHP 8.2.4 — cli) by Justin Hileman
+> \App\Jobs\EliminarRegistrosAntiguos::dispatchSync();
+= 0
+
+>
+ */

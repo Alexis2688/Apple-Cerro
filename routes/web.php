@@ -7,6 +7,7 @@ use App\Http\Controllers\CompraController;
 use App\Http\Controllers\CatalogoController;
 use App\Http\Controllers\BalanceController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CompraInsumoController;
 
 use App\Http\Controllers\ProfileController;
 
@@ -69,4 +70,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Balance
     Route::get('/balance', [BalanceController::class, 'index'])->name('balance');
+
+    Route::resource('compras-insumos', CompraInsumoController::class)->except(['show']);
+    Route::post('compras-insumos/destroy-multiple', [CompraInsumoController::class, 'destroyMultiple'])
+        ->name('compras-insumos.destroy-multiple');
 });

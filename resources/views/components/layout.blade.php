@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Apple Cell - @yield('title')</title>
+  <title>Apple Cerro - @yield('title')</title>
   <!-- Favicon vacío para eliminar el de Laravel -->
   <link rel="icon" href="data:,">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.3/cdn.min.js" defer></script>
@@ -172,8 +172,8 @@
       <div class="sidebar-content">
         <div class="p-4 flex items-center justify-between border-b border-gray-800">
           <a href="{{ route('inicio') }}" class="brand-container">
-            <img src="{{ asset('img/logo2.png') }}" alt="Apple Cell Logo" class="logo">
-            <span class="logo-text">Apple Cell</span>
+            <img src="{{ asset('img/logo2.png') }}" alt="Apple Cerro Logo" class="logo">
+            <span class="logo-text">Apple Cerro</span>
           </a>
           <button @click="sidebarOpen = false" class="lg:hidden text-gray-400 hover:text-white">
             <i class="fas fa-times"></i>
@@ -202,12 +202,22 @@
             <span>Registrar Venta</span>
           </a>
 
-          <a href="{{ route('compras.index') }}"
+                    <!-- Registrar Compra -->
+            <a href="{{ route('compras.index') }}"
             class="sidebar-item flex items-center px-4 py-3 rounded-md
-                  {{ Request::is('compras*') ? 'active' : 'text-gray-300' }}">
-            <i class="fas fa-shopping-basket mr-3 w-5 text-center"></i>
-            <span>Registrar Compra</span>
-          </a>
+                {{ Request::is('compras') ? 'active' : 'text-gray-300' }}">
+                <i class="fas fa-shopping-basket mr-3 w-5 text-center"></i>
+            Registrar Compra
+            </a>
+
+            <!-- Registrar Compra de Insumo -->
+            <a href="{{ route('compras-insumos.index') }}"
+            class="sidebar-item flex items-center px-4 py-3 rounded-md
+                {{ Request::is('compras-insumos*') ? 'active' : 'text-gray-300' }}">
+            <i class="fas fa-boxes mr-3"></i>
+            Registrar Compra de Insumo
+            </a>
+
 
           <a href="{{ route('reparaciones.index') }}"
             class="sidebar-item flex items-center px-4 py-3 rounded-md
@@ -305,7 +315,7 @@
     <!-- Footer -->
     <footer class="footer">
       <div class="container mx-auto">
-        <p>&copy; 2025 Apple Cell - Todos los derechos reservados</p>
+        <p>&copy; 2025 Apple Cerro - Todos los derechos reservados</p>
       </div>
     </footer>
   </div>
