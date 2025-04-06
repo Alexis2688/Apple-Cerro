@@ -1,25 +1,19 @@
 [phases.setup]
-nixpkgs = ["php", "composer", "nodejs", "corepack"]
-
-cmds = [
-  "corepack enable",
-  "corepack prepare yarn@stable --activate"
-]
+nixpkgs = ["php", "composer"]
 
 [phases.install]
 cmds = [
-  "composer install",
-  "yarn install"
+  "composer install"
 ]
 
 [phases.build]
 cmds = [
-  "yarn build",
+  "php artisan migrate --force",
   "php artisan optimize",
   "chmod -R 777 storage/",
   "chmod -R 777 bootstrap/cache",
   "php artisan storage:link"
 ]
 
-[phases.start]
+[start]
 cmd = "php artisan serve --host=0.0.0.0 --port=$PORT"
