@@ -1,20 +1,31 @@
+# 🛠️ Etapa de configuración: define qué paquetes usar en la build
 [phases.setup]
-nixpkgs = ["php", "phpPackages.composer", "nodejs_20"]
+nixpkgs = [
+  "php",                       # PHP necesario para Laravel
+  "phpPackages.composer",     # Composer para gestionar dependencias PHP
+  "nodejs_20"                 # Node.js v20 para compilar assets con Vite o Laravel Mix
+]
 
+# 📦 Etapa de instalación: instala dependencias del proyecto
 [phases.install]
 cmds = [
-  "composer install",
-  "npm install"
+  "composer install",          # Instala dependencias PHP desde composer.lock
+  "npm install"                # Instala dependencias de frontend (JS, CSS, etc.)
 ]
 
+# 🏗️ Etapa de construcción: compila y prepara el proyecto
 [phases.build]
 cmds = [
-  "npm run build",
-  "php artisan migrate --force",
-  "php artisan db:seed --force",
-  "php artisan optimize",
-  "php artisan storage:link"
+  "npm run build",             # Compila assets de frontend (Vite/Laravel Mix)
+  "php artisan migrate --force",      # Ejecuta migraciones (estructura de la BD)
+  "php artisan db:seed --force",      # Ejecuta seeders para poblar la base de datos
+  "php artisan optimize",             # Optimiza el arranque de Laravel (caches)
+  "php artisan storage:link",          # Crea el enlace simbólico para acceder al storage público
+  "php artisan queue:work --verbose --tries=3 --timeout=90"
+
 ]
 
+# 🚀 Comando de inicio: cómo iniciar la app
 [start]
 cmd = "php artisan serve --host=0.0.0.0 --port=$PORT"
+# Usa el servidor embebido de Laravel en Railway (no necesita Apache/Nginx)
