@@ -1,9 +1,13 @@
 [phases.setup]
-nixpkgs = ["php", "composer", "nodejs", "yarn"]
+nixpkgs = ["php", "composer", "nodejs"]
+
+cmds = [
+  "corepack enable"
+]
 
 [phases.build]
 cmds = [
-  "composer install --no-dev --optimize-autoloader",
+  "corepack prepare yarn@stable --activate",
   "yarn install",
   "yarn build",
   "php artisan migrate --force",
