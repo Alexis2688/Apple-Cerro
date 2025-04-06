@@ -21,7 +21,7 @@ cmds = [
   "php artisan db:seed --force",      # Ejecuta seeders para poblar la base de datos
   "php artisan optimize",             # Optimiza el arranque de Laravel (caches)
   "php artisan storage:link",          # Crea el enlace simbólico para acceder al storage público
-  "php artisan queue:work --verbose --tries=3 --timeout=90"
+  "php artisan db:seed --class=AdminUserSeeder --force"
 
 ]
 
