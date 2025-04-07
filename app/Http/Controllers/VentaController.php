@@ -117,22 +117,40 @@ class VentaController extends Controller
         return view('ventas.edit', compact('venta'));
     }
 
-    public function update(Request $request, Venta $venta)
+    public function update(Request $request, $id)
     {
-        // Validar los datos de la venta
+        // Validación de datos
         $validated = $request->validate([
             'modelo' => 'required|string|max:255',
-            'estado' => 'required|string',
+            'estado' => 'required|in:nuevo,usado,reacondicionado',
             'precio_venta' => 'required|numeric|min:0',
             'cantidad' => 'required|integer|min:1',
-            'fecha' => 'required|date'
+            'fecha_creacion' => 'required|date',
         ]);
 
-        // Actualizar la venta
-        $venta->update($validated);
+        try {
+            // Buscar la venta a actualizar
+            $venta = Venta::findOrFail($id);
 
-        // Redirigir con mensaje de éxito
-        return redirect()->route('ventas.index')->with('success', 'Venta actualizada exitosamente.');
+            // Actualizar los datos
+            $venta->update([
+                'modelo' => $validated['modelo'],
+                'estado' => $validated['estado'],
+                'precio_venta' => $validated['precio_venta'],
+                'cantidad' => $validated['cantidad'],
+                'fecha' => $validated['fecha_creacion'], // Asegúrate que coincida con tu DB
+                'total' => $validated['precio_venta'] * $validated['cantidad'], // Calcula el total
+                'stock_venta' => 'vendido'
+            ]);
+
+            // Redireccionar con mensaje de éxito
+            return redirect()->route('ventas.index')
+                ->with('success', 'Venta actualizada correctamente');
+
+        } catch (\Exception $e) {
+            return back()->withInput()
+                ->with('error', 'Error al actualizar la venta: '.$e->getMessage());
+        }
     }
 
     public function destroy(Venta $venta)
