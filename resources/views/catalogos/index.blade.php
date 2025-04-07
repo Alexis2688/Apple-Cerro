@@ -3,7 +3,7 @@
 
     @section('content')
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Encabezado con efecto vidrio -->
+        <!-- Encabezado -->
         <div class="bg-white/80 backdrop-blur-md rounded-xl shadow-sm p-6 mb-8 border border-gray-100">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
@@ -13,11 +13,41 @@
                     </h1>
                     <p class="text-gray-500 mt-1">Gestiona tu inventario de productos</p>
                 </div>
-                <a href="{{ route('catalogos.create') }}"
-                   class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 border border-transparent rounded-lg font-semibold text-white hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all shadow-md">
-                    <i class="fas fa-plus-circle mr-2"></i>
-                    Nuevo Producto
-                </a>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <!-- Barra de búsqueda -->
+                    <form action="{{ route('catalogos.index') }}" method="GET" class="flex flex-col sm:flex-row gap-4 w-full">
+                        <div class="relative flex-1">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-search text-gray-400"></i>
+                            </div>
+                            <input type="text" name="search" value="{{ request('search') }}"
+                                   class="bg-white border border-gray-300 rounded-lg pl-10 pr-4 py-2 w-full focus:ring-blue-500 focus:border-blue-500"
+                                   placeholder="Buscar productos...">
+                            @if(request('search'))
+                            <a href="{{ route('catalogos.index') }}"
+                               class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-times"></i>
+                            </a>
+                            @endif
+                        </div>
+
+                        <select name="disponibilidad" class="bg-white border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">Todos</option>
+                            <option value="disponible" {{ request('disponibilidad') == 'disponible' ? 'selected' : '' }}>Disponibles</option>
+                            <option value="agotado" {{ request('disponibilidad') == 'agotado' ? 'selected' : '' }}>Agotados</option>
+                        </select>
+
+                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                            <i class="fas fa-filter mr-1"></i> Filtrar
+                        </button>
+                    </form>
+
+                    <a href="{{ route('catalogos.create') }}"
+                       class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 border border-transparent rounded-lg font-semibold text-white hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all shadow-md">
+                        <i class="fas fa-plus-circle mr-2"></i>
+                        Nuevo Producto
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -45,6 +75,7 @@
         @endif
 
         <!-- Grid de productos -->
+        @if($catalogos->count() > 0)
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             @foreach ($catalogos as $catalogo)
             <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 group">
@@ -77,13 +108,19 @@
                         <span class="text-xl font-bold text-gray-900">
                             ${{ number_format($catalogo->precio, 2) }}
                         </span>
-                        <span class="text-sm text-gray-500">
+                        <div class="flex flex-col items-end">
                             @if($catalogo->stock > 0)
-                            <span class="text-green-500 font-medium">{{ $catalogo->stock }} en stock</span>
+                            <span class="text-sm font-medium text-green-600">
+                                <i class="fas fa-check-circle mr-1"></i> Disponible
+                            </span>
+                            <span class="text-xs text-gray-500">{{ $catalogo->stock }} unidades</span>
                             @else
-                            <span class="text-red-500 font-medium">Agotado</span>
+                            <span class="text-sm font-medium text-red-600">
+                                <i class="fas fa-times-circle mr-1"></i> Agotado
+                            </span>
+                            <span class="text-xs text-gray-500">0 unidades</span>
                             @endif
-                        </span>
+                        </div>
                     </div>
 
                     <!-- Botones de acción -->
@@ -110,8 +147,16 @@
             </div>
             @endforeach
         </div>
-
-
+        @else
+        <div class="bg-white rounded-xl shadow-sm p-8 text-center border border-gray-100">
+            <i class="fas fa-box-open text-4xl text-gray-300 mb-4"></i>
+            <h3 class="text-xl font-medium text-gray-700 mb-2">No se encontraron productos</h3>
+            <p class="text-gray-500 mb-4">No hay productos que coincidan con tu búsqueda o filtros</p>
+            <a href="{{ route('catalogos.index') }}" class="text-blue-500 hover:text-blue-700 font-medium">
+                <i class="fas fa-undo mr-1"></i> Limpiar filtros
+            </a>
+        </div>
+        @endif
     </div>
     @endsection
 </x-layout>

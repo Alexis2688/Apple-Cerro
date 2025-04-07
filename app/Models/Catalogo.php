@@ -14,6 +14,8 @@ class Catalogo extends Model
     protected $fillable = [
         'nombre',
         'precio',
+        'stock',
+        'categoria',
         'descripcion',
         'imagen_url'
     ];

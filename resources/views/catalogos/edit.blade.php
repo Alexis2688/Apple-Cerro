@@ -2,7 +2,7 @@
     @section('title', 'Editar Producto - Apple Cell')
     @section('content')
     <div class="max-w-4xl mx-auto px-4 py-8">
-        <!-- Encabezado con efecto vidrio -->
+        <!-- Encabezado -->
         <div class="bg-white/80 backdrop-blur-md rounded-xl shadow-sm p-6 mb-8 border border-gray-100">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
@@ -22,15 +22,7 @@
 
         <!-- Mensajes de error -->
         @if ($errors->any())
-        <div x-data="{ show: true }"
-             x-show="show"
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 translate-y-2"
-             x-transition:enter-end="opacity-100 translate-y-0"
-             x-transition:leave="transition ease-in duration-200"
-             x-transition:leave-start="opacity-100 translate-y-0"
-             x-transition:leave-end="opacity-0 translate-y-2"
-             class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg shadow-sm">
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg shadow-sm">
             <div class="flex justify-between items-start">
                 <div class="flex items-center">
                     <i class="fas fa-exclamation-circle text-red-500 mr-3 text-xl"></i>
@@ -62,16 +54,11 @@
                         <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">
                             Nombre del Producto <span class="text-red-500">*</span>
                         </label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-box text-gray-400"></i>
-                            </div>
-                            <input type="text" name="nombre" id="nombre"
-                                   class="pl-10 form-input block w-full rounded-lg py-3 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                                   placeholder="Ej: iPhone 13 Pro Max"
-                                   value="{{ old('nombre', $catalogo->nombre) }}"
-                                   required>
-                        </div>
+                        <input type="text" name="nombre" id="nombre"
+                               class="form-input block w-full rounded-lg py-3 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                               placeholder="Ej: iPhone 13 Pro Max"
+                               value="{{ old('nombre', $catalogo->nombre) }}"
+                               required>
                     </div>
 
                     <!-- Precio -->
@@ -98,17 +85,12 @@
                         <label for="stock" class="block text-sm font-medium text-gray-700 mb-1">
                             Cantidad en Stock <span class="text-red-500">*</span>
                         </label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-layer-group text-gray-400"></i>
-                            </div>
-                            <input type="number" name="stock" id="stock"
-                                   class="pl-10 form-input block w-full rounded-lg py-3 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                                   placeholder="Ej: 10"
-                                   min="0"
-                                   value="{{ old('stock', $catalogo->stock ?? 0) }}"
-                                   required>
-                        </div>
+                        <input type="number" name="stock" id="stock"
+                               class="form-input block w-full rounded-lg py-3 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                               placeholder="Ej: 10"
+                               min="0"
+                               value="{{ old('stock', $catalogo->stock) }}"
+                               required>
                     </div>
 
                     <!-- Categoría -->
@@ -119,53 +101,33 @@
                         <select name="categoria" id="categoria"
                                 class="form-input block w-full rounded-lg py-3 border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                             <option value="">Seleccione una categoría</option>
-                            <option value="Smartphones" {{ old('categoria', $catalogo->categoria ?? '') == 'Smartphones' ? 'selected' : '' }}>Smartphones</option>
-                            <option value="Accesorios" {{ old('categoria', $catalogo->categoria ?? '') == 'Accesorios' ? 'selected' : '' }}>Accesorios</option>
-                            <option value="Repuestos" {{ old('categoria', $catalogo->categoria ?? '') == 'Repuestos' ? 'selected' : '' }}>Repuestos</option>
+                            <option value="Smartphones" {{ old('categoria', $catalogo->categoria) == 'Smartphones' ? 'selected' : '' }}>Smartphones</option>
+                            <option value="Accesorios" {{ old('categoria', $catalogo->categoria) == 'Accesorios' ? 'selected' : '' }}>Accesorios</option>
+                            <option value="Repuestos" {{ old('categoria', $catalogo->categoria) == 'Repuestos' ? 'selected' : '' }}>Repuestos</option>
                         </select>
                     </div>
 
                     <!-- Imagen -->
                     <div class="col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                        <label for="imagen" class="block text-sm font-medium text-gray-700 mb-1">
                             Imagen del Producto
                         </label>
 
-                        <!-- Vista previa de la imagen actual -->
                         @if($catalogo->imagen_url)
                         <div class="mb-4">
                             <p class="text-sm text-gray-500 mb-2">Imagen actual:</p>
-                            <div class="relative w-48 h-48 rounded-lg overflow-hidden border border-gray-200">
-                                <img src="{{ $catalogo->imagen_url }}" alt="{{ $catalogo->nombre }}" class="w-full h-full object-cover">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                            </div>
+                            <img src="{{ $catalogo->imagen_url }}" alt="{{ $catalogo->nombre }}" class="w-48 h-48 rounded-lg object-cover border border-gray-200">
                         </div>
                         @endif
 
-                        <!-- Selector de archivos -->
-                        <div id="file-upload-container" class="file-upload relative rounded-lg p-6 text-center cursor-pointer">
-                            <input type="file" name="imagen" id="imagen"
-                                   class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                   accept=".jpg, .jpeg, .png">
-                            <div class="flex flex-col items-center justify-center space-y-2">
-                                <i class="fas fa-cloud-upload-alt text-3xl text-gray-400"></i>
-                                <p class="text-sm text-gray-600">
-                                    <span class="font-medium text-blue-600">Haz clic para subir</span> o arrastra y suelta
-                                </p>
-                                <p class="text-xs text-gray-500">JPG, PNG (Máx. 2MB)</p>
-                            </div>
-                        </div>
-                        <div id="file-preview" class="mt-3 hidden">
-                            <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
-                                <div class="flex items-center space-x-3">
-                                    <i class="fas fa-file-image text-blue-500"></i>
-                                    <span id="file-name" class="text-sm font-medium"></span>
-                                </div>
-                                <button type="button" id="remove-file" class="text-red-500 hover:text-red-700">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                        </div>
+                        <input type="file" name="imagen" id="imagen"
+                               class="block w-full text-sm text-gray-500
+                                      file:mr-4 file:py-2 file:px-4
+                                      file:rounded-lg file:border-0
+                                      file:text-sm file:font-semibold
+                                      file:bg-blue-50 file:text-blue-700
+                                      hover:file:bg-blue-100"
+                               accept="image/*">
                     </div>
 
                     <!-- Descripción -->
@@ -192,51 +154,5 @@
             </form>
         </div>
     </div>
-
-    <script>
-        // Manejo de la subida de archivos con preview
-        document.addEventListener('DOMContentLoaded', function() {
-            const fileInput = document.getElementById('imagen');
-            const fileUploadContainer = document.getElementById('file-upload-container');
-            const filePreview = document.getElementById('file-preview');
-            const fileName = document.getElementById('file-name');
-            const removeFileBtn = document.getElementById('remove-file');
-
-            // Efecto al arrastrar sobre el área
-            ['dragenter', 'dragover'].forEach(eventName => {
-                fileUploadContainer.addEventListener(eventName, highlight, false);
-            });
-
-            ['dragleave', 'drop'].forEach(eventName => {
-                fileUploadContainer.addEventListener(eventName, unhighlight, false);
-            });
-
-            function highlight(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                fileUploadContainer.classList.add('dragover');
-            }
-
-            function unhighlight(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                fileUploadContainer.classList.remove('dragover');
-            }
-
-            // Mostrar preview del archivo seleccionado
-            fileInput.addEventListener('change', function() {
-                if (this.files.length > 0) {
-                    fileName.textContent = this.files[0].name;
-                    filePreview.classList.remove('hidden');
-                }
-            });
-
-            // Eliminar archivo seleccionado
-            removeFileBtn.addEventListener('click', function() {
-                fileInput.value = '';
-                filePreview.classList.add('hidden');
-            });
-        });
-    </script>
     @endsection
 </x-layout>
